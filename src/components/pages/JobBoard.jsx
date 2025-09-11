@@ -9,12 +9,14 @@ import JobCard from "@/components/molecules/JobCard";
 import { useRole } from "@/hooks/useRole";
 import jobService from "@/services/api/jobService";
 import applicationService from "@/services/api/applicationService";
+import savedJobsService from "@/services/api/savedJobsService";
 import { toast } from "react-toastify";
 
 const JobBoard = () => {
   const { currentRole } = useRole();
-  const [jobs, setJobs] = useState([]);
+const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
+  const [savedJobs, setSavedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filters, setFilters] = useState({
@@ -39,10 +41,9 @@ const JobBoard = () => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     loadJobs();
   }, []);
-
   const handleSearch = (query) => {
     let filtered = jobs;
     
@@ -244,13 +245,14 @@ const JobBoard = () => {
       {/* Job Listings */}
       {filteredJobs.length > 0 ? (
         <div className="grid gap-6">
-          {filteredJobs.map((job) => (
+{filteredJobs.map((job) => (
             <JobCard
               key={job.Id}
               job={job}
               onApply={handleApply}
               onView={handleView}
               onEdit={handleEdit}
+              showSaveButton={true}
             />
           ))}
         </div>

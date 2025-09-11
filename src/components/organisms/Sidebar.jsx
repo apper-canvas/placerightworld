@@ -5,9 +5,10 @@ import { useRole } from "@/hooks/useRole";
 const Sidebar = ({ isOpen, onClose }) => {
   const { currentRole } = useRole();
 
-  const candidateNavItems = [
+const candidateNavItems = [
     { name: "Dashboard", path: "/", icon: "LayoutDashboard" },
     { name: "Job Board", path: "/jobs", icon: "Search" },
+    { name: "Saved Jobs", path: "/saved-jobs", icon: "Heart" },
     { name: "My Applications", path: "/applications", icon: "FileText" },
     { name: "Messages", path: "/messages", icon: "MessageSquare" },
     { name: "Profile", path: "/profile", icon: "User" }

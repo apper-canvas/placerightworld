@@ -1,11 +1,52 @@
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
 import { useRole } from "@/hooks/useRole";
+import savedJobsService from "@/services/api/savedJobsService";
+import { toast } from "react-toastify";
 
-const JobCard = ({ job, onApply, onView, onEdit }) => {
+const JobCard = ({ job, onApply, onView, onEdit, showSaveButton = true }) => {
   const { currentRole } = useRole();
+  const [isSaved, setIsSaved] = useState(false);
+  const [savingJob, setSavingJob] = useState(false);
+
+  useEffect(() => {
+    const checkSavedStatus = async () => {
+      if (currentRole === "candidate" && showSaveButton) {
+        try {
+          const saved = await savedJobsService.isSaved(job.Id);
+          setIsSaved(saved);
+        } catch (err) {
+          console.error("Error checking saved status:", err);
+        }
+      }
+    };
+
+    checkSavedStatus();
+  }, [job.Id, currentRole, showSaveButton]);
+
+  const handleSaveToggle = async () => {
+    if (savingJob) return;
+
+    setSavingJob(true);
+    try {
+      const newSavedStatus = await savedJobsService.toggle(job.Id);
+      setIsSaved(newSavedStatus);
+      
+      if (newSavedStatus) {
+        toast.success(`"${job.title}" saved for later`);
+      } else {
+        toast.info(`"${job.title}" removed from saved jobs`);
+      }
+    } catch (err) {
+      toast.error("Failed to update saved job");
+      console.error("Error toggling saved job:", err);
+    } finally {
+      setSavingJob(false);
+    }
+  };
   
   const statusColors = {
     "Active": "success",
@@ -31,13 +72,32 @@ const JobCard = ({ job, onApply, onView, onEdit }) => {
             {job.location}
           </div>
         </div>
-        <div className="flex gap-2">
-          <Badge variant={statusColors[job.status] || "default"}>
-            {job.status}
-          </Badge>
-          <Badge variant={typeColors[job.type] || "default"}>
-            {job.type}
-          </Badge>
+<div className="flex items-center justify-between">
+          <div className="flex gap-2">
+            <Badge variant={statusColors[job.status] || "default"}>
+              {job.status}
+            </Badge>
+            <Badge variant={typeColors[job.type] || "default"}>
+              {job.type}
+            </Badge>
+          </div>
+          
+          {/* Save Button for Candidates */}
+          {currentRole === "candidate" && showSaveButton && (
+            <Button
+              variant="ghost"
+              size="small"
+              onClick={handleSaveToggle}
+              disabled={savingJob}
+              className="p-2 hover:bg-red-50 hover:text-red-500 transition-colors"
+            >
+              <ApperIcon 
+                name="Heart" 
+                size={18} 
+                className={isSaved ? "fill-current text-red-500" : "text-gray-400"}
+              />
+            </Button>
+          )}
         </div>
       </div>
 
@@ -60,7 +120,7 @@ const JobCard = ({ job, onApply, onView, onEdit }) => {
           {job.applications.length} applications
         </div>
         
-        <div className="flex gap-2">
+<div className="flex gap-2">
           <Button variant="outline" size="small" onClick={() => onView(job)}>
             View Details
           </Button>

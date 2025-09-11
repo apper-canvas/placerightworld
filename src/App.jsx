@@ -7,16 +7,18 @@ import Candidates from "@/components/pages/Candidates";
 import Applications from "@/components/pages/Applications";
 import Messages from "@/components/pages/Messages";
 import Profile from "@/components/pages/Profile";
+import SavedJobs from "@/components/pages/SavedJobs";
 import { RoleProvider } from "@/hooks/useRole";
 
 function App() {
   return (
     <RoleProvider>
       <BrowserRouter>
-        <Routes>
+<Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="jobs" element={<JobBoard />} />
+            <Route path="saved-jobs" element={<SavedJobs />} />
             <Route path="candidates" element={<Candidates />} />
             <Route path="applications" element={<Applications />} />
             <Route path="messages" element={<Messages />} />

@@ -9,7 +9,7 @@ import { useRole } from "@/hooks/useRole";
 import jobService from "@/services/api/jobService";
 import applicationService from "@/services/api/applicationService";
 import candidateService from "@/services/api/candidateService";
-
+import savedJobsService from "@/services/api/savedJobsService";
 const Dashboard = () => {
   const { currentRole } = useRole();
   const [dashboardData, setDashboardData] = useState({
@@ -25,10 +25,11 @@ const Dashboard = () => {
       setError("");
       setLoading(true);
 
-      if (currentRole === "candidate") {
-        const [jobs, applications] = await Promise.all([
+if (currentRole === "candidate") {
+        const [jobs, applications, savedJobsCount] = await Promise.all([
           jobService.getAll(),
-          applicationService.getAll()
+          applicationService.getAll(),
+          savedJobsService.getCount()
         ]);
 
         const recentJobs = jobs.slice(0, 3);
@@ -37,6 +38,7 @@ const Dashboard = () => {
         setDashboardData({
           stats: {
             totalJobs: jobs.filter(j => j.status === "Active").length,
+            savedJobs: savedJobsCount,
             myApplications: applications.length,
             interviews: applications.filter(a => a.status === "Interview").length,
             offers: applications.filter(a => a.status === "Offer").length
@@ -124,7 +126,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      {/* Recent Content */}
+{/* Recent Content */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Jobs */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
