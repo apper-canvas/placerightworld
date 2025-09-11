@@ -8,6 +8,7 @@ import SearchBar from "@/components/molecules/SearchBar";
 import CandidateCard from "@/components/molecules/CandidateCard";
 import { useRole } from "@/hooks/useRole";
 import candidateService from "@/services/api/candidateService";
+import savedCandidatesService from "@/services/api/savedCandidatesService";
 import { toast } from "react-toastify";
 
 const Candidates = () => {
@@ -106,6 +107,11 @@ const Candidates = () => {
       experience: ""
     });
     setFilteredCandidates(candidates);
+  };
+
+const handleSave = async (candidate, isSaved) => {
+    // Save/unsave handling is done in CandidateCard component
+    console.log(`Candidate ${candidate.name} ${isSaved ? 'saved' : 'removed'}`);
   };
 
   const handleView = (candidate) => {
@@ -227,7 +233,7 @@ const Candidates = () => {
         </div>
       </div>
 
-      {/* Candidate Listings */}
+{/* Candidate Listings */}
       {filteredCandidates.length > 0 ? (
         <div className="grid gap-6">
           {filteredCandidates.map((candidate) => (
@@ -237,6 +243,7 @@ const Candidates = () => {
               onView={handleView}
               onMessage={handleMessage}
               onInvite={handleInvite}
+              onSave={handleSave}
             />
           ))}
         </div>

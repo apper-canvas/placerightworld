@@ -8,6 +8,7 @@ import Applications from "@/components/pages/Applications";
 import Messages from "@/components/pages/Messages";
 import Profile from "@/components/pages/Profile";
 import SavedJobs from "@/components/pages/SavedJobs";
+import SavedCandidates from "@/components/pages/SavedCandidates";
 import { RoleProvider } from "@/hooks/useRole";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
             <Route path="jobs" element={<JobBoard />} />
             <Route path="saved-jobs" element={<SavedJobs />} />
             <Route path="candidates" element={<Candidates />} />
+            <Route path="saved-candidates" element={<SavedCandidates />} />
             <Route path="applications" element={<Applications />} />
             <Route path="messages" element={<Messages />} />
             <Route path="profile" element={<Profile />} />

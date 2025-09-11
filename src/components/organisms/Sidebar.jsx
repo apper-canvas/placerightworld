@@ -14,10 +14,11 @@ const candidateNavItems = [
     { name: "Profile", path: "/profile", icon: "User" }
   ];
 
-  const recruiterNavItems = [
+const recruiterNavItems = [
     { name: "Dashboard", path: "/", icon: "LayoutDashboard" },
     { name: "Job Postings", path: "/jobs", icon: "Briefcase" },
     { name: "Candidates", path: "/candidates", icon: "Users" },
+    { name: "Saved Candidates", path: "/saved-candidates", icon: "Heart" },
     { name: "Applications", path: "/applications", icon: "FileText" },
     { name: "Messages", path: "/messages", icon: "MessageSquare" },
     { name: "Profile", path: "/profile", icon: "Building2" }
