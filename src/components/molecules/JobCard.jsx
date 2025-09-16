@@ -115,9 +115,9 @@ toast.success(`"${job.title_c}" saved for later`);
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex items-center text-sm text-gray-500">
+<div className="flex items-center text-sm text-gray-500">
           <ApperIcon name="Users" className="w-4 h-4 mr-1" />
-          {job.applications.length} applications
+          {job.applications?.length || 0} applications
         </div>
         
 <div className="flex gap-2">
