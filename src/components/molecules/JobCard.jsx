@@ -36,9 +36,9 @@ const JobCard = ({ job, onApply, onView, onEdit, showSaveButton = true }) => {
       setIsSaved(newSavedStatus);
       
       if (newSavedStatus) {
-        toast.success(`"${job.title}" saved for later`);
+toast.success(`"${job.title_c}" saved for later`);
       } else {
-        toast.info(`"${job.title}" removed from saved jobs`);
+        toast.info(`"${job.title_c}" removed from saved jobs`);
       }
     } catch (err) {
       toast.error("Failed to update saved job");
@@ -65,20 +65,20 @@ const JobCard = ({ job, onApply, onView, onEdit, showSaveButton = true }) => {
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 hover:scale-[1.01]">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{job.title}</h3>
-          <p className="text-primary font-medium mb-2">{job.company}</p>
+<h3 className="text-lg font-semibold text-gray-900 mb-2">{job.title_c}</h3>
+          <p className="text-primary font-medium mb-2">{job.company_c}</p>
           <div className="flex items-center text-gray-600 text-sm mb-3">
             <ApperIcon name="MapPin" className="w-4 h-4 mr-1" />
-            {job.location}
+{job.location_c}
           </div>
         </div>
 <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            <Badge variant={statusColors[job.status] || "default"}>
-              {job.status}
+<Badge variant={statusColors[job.status_c] || "default"}>
+              {job.status_c}
             </Badge>
-            <Badge variant={typeColors[job.type] || "default"}>
-              {job.type}
+            <Badge variant={typeColors[job.type_c] || "default"}>
+              {job.type_c}
             </Badge>
           </div>
           
@@ -101,16 +101,16 @@ const JobCard = ({ job, onApply, onView, onEdit, showSaveButton = true }) => {
         </div>
       </div>
 
-      <p className="text-gray-600 text-sm mb-4 line-clamp-3">{job.description}</p>
+<p className="text-gray-600 text-sm mb-4 line-clamp-3">{job.description_c}</p>
 
       <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
         <div className="flex items-center">
           <ApperIcon name="DollarSign" className="w-4 h-4 mr-1" />
-          ${job.salaryRange.min.toLocaleString()} - ${job.salaryRange.max.toLocaleString()}
+{job.salary_range_c}
         </div>
         <div className="flex items-center">
           <ApperIcon name="Calendar" className="w-4 h-4 mr-1" />
-          {format(new Date(job.postedDate), "MMM d, yyyy")}
+{format(new Date(job.posted_date_c), "MMM d, yyyy")}
         </div>
       </div>
 

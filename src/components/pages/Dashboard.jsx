@@ -37,7 +37,7 @@ if (currentRole === "candidate") {
 
         setDashboardData({
           stats: {
-            totalJobs: jobs.filter(j => j.status === "Active").length,
+totalJobs: jobs.filter(j => j.status_c === "Active").length,
             savedJobs: savedJobsCount,
             myApplications: applications.length,
             interviews: applications.filter(a => a.status === "Interview").length,
@@ -142,12 +142,12 @@ if (currentRole === "candidate") {
           {dashboardData.recentJobs.length > 0 ? (
             <div className="space-y-4">
               {dashboardData.recentJobs.map((job) => (
-                <div key={job.Id} className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow">
-                  <h3 className="font-medium text-gray-900 mb-1">{job.title}</h3>
-                  <p className="text-sm text-primary mb-2">{job.company}</p>
+<div key={job.Id} className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                  <h3 className="font-medium text-gray-900 mb-1">{job.title_c}</h3>
+                  <p className="text-sm text-primary mb-2">{job.company_c}</p>
                   <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>${job.salaryRange.min.toLocaleString()} - ${job.salaryRange.max.toLocaleString()}</span>
-                    <span>{job.applications.length} applications</span>
+                    <span>{job.salary_range_c}</span>
+                    <span>Active job</span>
                   </div>
                 </div>
               ))}
@@ -174,24 +174,24 @@ if (currentRole === "candidate") {
 
           {dashboardData.recentApplications.length > 0 ? (
             <div className="space-y-4">
-              {dashboardData.recentApplications.map((application) => (
+{dashboardData.recentApplications.map((application) => (
                 <div key={application.Id} className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-medium text-gray-900">
                       {currentRole === "candidate" ? "Application #" + application.Id : "Candidate Application"}
                     </h3>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      application.status === "Applied" ? "bg-blue-100 text-blue-800" :
-                      application.status === "Reviewing" ? "bg-yellow-100 text-yellow-800" :
-                      application.status === "Interview" ? "bg-purple-100 text-purple-800" :
-                      application.status === "Offer" ? "bg-green-100 text-green-800" :
+                      application.status_c === "Applied" ? "bg-blue-100 text-blue-800" :
+                      application.status_c === "Reviewing" ? "bg-yellow-100 text-yellow-800" :
+                      application.status_c === "Interview" ? "bg-purple-100 text-purple-800" :
+                      application.status_c === "Offer" ? "bg-green-100 text-green-800" :
                       "bg-gray-100 text-gray-800"
                     }`}>
-                      {application.status}
+                      {application.status_c}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Job ID: {application.jobId} • Applied: {new Date(application.appliedDate).toLocaleDateString()}
+                    Job ID: {application.job_id_c?.Id || application.job_id_c} • Applied: {new Date(application.applied_date_c).toLocaleDateString()}
                   </p>
                 </div>
               ))}

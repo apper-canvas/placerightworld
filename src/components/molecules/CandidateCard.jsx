@@ -50,22 +50,19 @@ const CandidateCard = ({ candidate, onView, onMessage, onInvite, onSave, showSav
       setSavingCandidate(false);
     }
   };
-const experienceYears = candidate.experience?.reduce((total, exp) => {
-    const years = exp.duration || 1;
-    return total + years;
-  }, 0) || 0;
+const experienceYears = candidate.experience_c ? 1 : 0; // Simplified for text field
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 hover:scale-[1.01]">
       <div className="flex items-start gap-4">
         <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-bold text-xl">
-          {candidate.name.split(" ").map(n => n[0]).join("").toUpperCase()}
+{candidate.name_c?.split(" ").map(n => n[0]).join("").toUpperCase()}
         </div>
         
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">{candidate.name}</h3>
+<h3 className="text-lg font-semibold text-gray-900 mb-1">{candidate.name_c}</h3>
           <div className="flex items-center text-gray-600 text-sm mb-2">
             <ApperIcon name="MapPin" className="w-4 h-4 mr-1" />
-            {candidate.location}
+{candidate.location_c}
           </div>
           <div className="flex items-center text-gray-600 text-sm mb-3">
             <ApperIcon name="Briefcase" className="w-4 h-4 mr-1" />
@@ -77,12 +74,12 @@ const experienceYears = candidate.experience?.reduce((total, exp) => {
       {/* Save Button for Recruiters */}
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          {candidate.skills?.slice(0, 3).map((skill, index) => (
+{candidate.skills_c?.split(',').slice(0, 3).map((skill, index) => (
             <Badge key={index} variant="default" className="text-xs">
               {skill}
             </Badge>
           ))}
-          {candidate.skills?.length > 3 && (
+{candidate.skills_c?.split(',').length > 3 && (
             <Badge variant="secondary" className="text-xs">
               +{candidate.skills.length - 3} more
             </Badge>
@@ -124,10 +121,10 @@ const experienceYears = candidate.experience?.reduce((total, exp) => {
 
       <div className="mb-4">
         <h4 className="text-sm font-medium text-gray-700 mb-2">Recent Experience</h4>
-        {candidate.experience?.[0] && (
+{candidate.experience_c && (
           <div className="text-sm text-gray-600">
-            <p className="font-medium">{candidate.experience[0].position}</p>
-            <p>{candidate.experience[0].company}</p>
+            <p className="font-medium">Experience</p>
+            <p>{candidate.experience_c.substring(0, 50)}...</p>
           </div>
         )}
       </div>

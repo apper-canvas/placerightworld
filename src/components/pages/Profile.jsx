@@ -23,14 +23,18 @@ const Profile = () => {
       setError("");
       setLoading(true);
       
-      if (currentRole === "candidate") {
+if (currentRole === "candidate") {
         const data = await candidateService.getById(1); // Mock candidate ID
-        setProfile(data);
-        setFormData(data);
+        if (data) {
+          setProfile(data);
+          setFormData(data);
+        }
       } else {
         const data = await companyService.getById(1); // Mock company ID
-        setProfile(data);
-        setFormData(data);
+        if (data) {
+          setProfile(data);
+          setFormData(data);
+        }
       }
     } catch (err) {
       setError("Failed to load profile");
@@ -129,33 +133,33 @@ const Profile = () => {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg border border-gray-200 p-6 sticky top-6">
             <div className="text-center mb-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
+<div className="w-24 h-24 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
                 {currentRole === "candidate" 
-                  ? profile.name?.split(" ").map(n => n[0]).join("").toUpperCase()
-                  : profile.name?.charAt(0)?.toUpperCase()
+                  ? profile.name_c?.split(" ").map(n => n[0]).join("").toUpperCase()
+                  : profile.name_c?.charAt(0)?.toUpperCase()
                 }
               </div>
               <h2 className="text-xl font-bold text-gray-900">
-                {profile.name}
+{profile.name_c}
               </h2>
               <p className="text-gray-600">
-                {currentRole === "candidate" ? profile.location : profile.industry}
+                {currentRole === "candidate" ? profile.location_c : profile.industry_c}
               </p>
             </div>
 
             {currentRole === "candidate" && (
               <div className="space-y-4">
                 <div className="flex items-center text-sm text-gray-600">
-                  <ApperIcon name="Mail" className="w-4 h-4 mr-2" />
-                  {profile.email}
+<ApperIcon name="Mail" className="w-4 h-4 mr-2" />
+                  {profile.email_c}
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <ApperIcon name="Phone" className="w-4 h-4 mr-2" />
-                  {profile.phone}
+                  {profile.phone_c}
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <ApperIcon name="MapPin" className="w-4 h-4 mr-2" />
-                  {profile.location}
+                  {profile.location_c}
                 </div>
               </div>
             )}
@@ -163,16 +167,16 @@ const Profile = () => {
             {currentRole === "recruiter" && (
               <div className="space-y-4">
                 <div className="flex items-center text-sm text-gray-600">
-                  <ApperIcon name="Building2" className="w-4 h-4 mr-2" />
-                  {profile.industry}
+<ApperIcon name="Building2" className="w-4 h-4 mr-2" />
+                  {profile.industry_c}
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <ApperIcon name="Users" className="w-4 h-4 mr-2" />
-                  {profile.size}
+                  {profile.size_c}
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <ApperIcon name="Globe" className="w-4 h-4 mr-2" />
-                  {profile.website}
+                  {profile.website_c}
                 </div>
               </div>
             )}
@@ -190,45 +194,45 @@ const Profile = () => {
             {editing ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
-                  label="Name"
-                  value={formData.name || ""}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
+label="Name"
+                  value={formData.name_c || ""}
+                  onChange={(e) => handleInputChange("name_c", e.target.value)}
                 />
                 {currentRole === "candidate" ? (
                   <>
                     <Input
-                      label="Email"
+label="Email"
                       type="email"
-                      value={formData.email || ""}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      value={formData.email_c || ""}
+                      onChange={(e) => handleInputChange("email_c", e.target.value)}
                     />
                     <Input
                       label="Phone"
-                      value={formData.phone || ""}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      value={formData.phone_c || ""}
+                      onChange={(e) => handleInputChange("phone_c", e.target.value)}
                     />
                     <Input
                       label="Location"
-                      value={formData.location || ""}
-                      onChange={(e) => handleInputChange("location", e.target.value)}
+                      value={formData.location_c || ""}
+                      onChange={(e) => handleInputChange("location_c", e.target.value)}
                     />
                   </>
                 ) : (
                   <>
-                    <Input
+<Input
                       label="Industry"
-                      value={formData.industry || ""}
-                      onChange={(e) => handleInputChange("industry", e.target.value)}
+                      value={formData.industry_c || ""}
+                      onChange={(e) => handleInputChange("industry_c", e.target.value)}
                     />
                     <Input
                       label="Company Size"
-                      value={formData.size || ""}
-                      onChange={(e) => handleInputChange("size", e.target.value)}
+                      value={formData.size_c || ""}
+                      onChange={(e) => handleInputChange("size_c", e.target.value)}
                     />
                     <Input
                       label="Website"
-                      value={formData.website || ""}
-                      onChange={(e) => handleInputChange("website", e.target.value)}
+                      value={formData.website_c || ""}
+                      onChange={(e) => handleInputChange("website_c", e.target.value)}
                     />
                   </>
                 )}
@@ -236,9 +240,9 @@ const Profile = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Description
                   </label>
-                  <textarea
-                    value={formData.description || ""}
-                    onChange={(e) => handleInputChange("description", e.target.value)}
+<textarea
+                    value={formData.description_c || ""}
+                    onChange={(e) => handleInputChange("description_c", e.target.value)}
                     rows={4}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 bg-white"
                     placeholder={currentRole === "candidate" ? "Tell us about yourself..." : "Describe your company..."}
@@ -250,43 +254,43 @@ const Profile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Name</label>
-                    <p className="mt-1 text-gray-900">{profile.name}</p>
+<p className="mt-1 text-gray-900">{profile.name_c}</p>
                   </div>
                   {currentRole === "candidate" ? (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
-                        <p className="mt-1 text-gray-900">{profile.email}</p>
+<label className="block text-sm font-medium text-gray-700">Email</label>
+                        <p className="mt-1 text-gray-900">{profile.email_c}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Phone</label>
-                        <p className="mt-1 text-gray-900">{profile.phone}</p>
+                        <p className="mt-1 text-gray-900">{profile.phone_c}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Location</label>
-                        <p className="mt-1 text-gray-900">{profile.location}</p>
+                        <p className="mt-1 text-gray-900">{profile.location_c}</p>
                       </div>
                     </>
                   ) : (
                     <>
-                      <div>
+<div>
                         <label className="block text-sm font-medium text-gray-700">Industry</label>
-                        <p className="mt-1 text-gray-900">{profile.industry}</p>
+                        <p className="mt-1 text-gray-900">{profile.industry_c}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Company Size</label>
-                        <p className="mt-1 text-gray-900">{profile.size}</p>
+                        <p className="mt-1 text-gray-900">{profile.size_c}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Website</label>
-                        <p className="mt-1 text-gray-900">{profile.website}</p>
+                        <p className="mt-1 text-gray-900">{profile.website_c}</p>
                       </div>
                     </>
                   )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Description</label>
-                  <p className="mt-1 text-gray-900">{profile.description}</p>
+<p className="mt-1 text-gray-900">{profile.description_c}</p>
                 </div>
               </div>
             )}

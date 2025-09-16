@@ -60,11 +60,11 @@ const Messages = () => {
 
     try {
       const messageData = {
-        conversationId: selectedConversation.Id,
-        senderId: currentRole === "candidate" ? 1 : 2,
-        content: newMessage,
-        timestamp: new Date().toISOString(),
-        read: false
+conversation_id_c: selectedConversation.Id,
+        sender_id_c: currentRole === "candidate" ? 1 : 2,
+        content_c: newMessage,
+        timestamp_c: new Date().toISOString(),
+        read_c: false
       };
 
       const savedMessage = await messageService.create(messageData);
@@ -116,7 +116,7 @@ const Messages = () => {
             {conversations.length > 0 ? (
               conversations.map((conversation) => (
                 <div
-                  key={conversation.Id}
+key={conversation.Id}
                   onClick={() => handleSelectConversation(conversation)}
                   className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
                     selectedConversation?.Id === conversation.Id ? "bg-primary/5 border-primary/20" : ""
@@ -124,27 +124,27 @@ const Messages = () => {
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-medium text-sm">
-                      {conversation.participantName.split(" ").map(n => n[0]).join("").toUpperCase()}
+{conversation.participant_name_c?.split(" ").map(n => n[0]).join("").toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <h3 className="font-medium text-gray-900 truncate">
-                          {conversation.participantName}
+                          {conversation.participant_name_c}
                         </h3>
                         <span className="text-xs text-gray-500">
-                          {format(new Date(conversation.lastMessageTime), "MMM d")}
+                          {format(new Date(conversation.last_message_time_c), "MMM d")}
                         </span>
                       </div>
                       <p className="text-sm text-gray-600 truncate">
-                        {conversation.lastMessage}
+                        {conversation.last_message_c}
                       </p>
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-xs text-gray-500">
-                          {conversation.jobTitle}
+                          {conversation.job_title_c}
                         </span>
-                        {conversation.unreadCount > 0 && (
+                        {conversation.unread_count_c > 0 && (
                           <Badge variant="info" className="text-xs">
-                            {conversation.unreadCount}
+                            {conversation.unread_count_c}
                           </Badge>
                         )}
                       </div>
@@ -172,15 +172,15 @@ const Messages = () => {
               <div className="p-4 border-b border-gray-200 bg-gray-50">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-medium text-sm">
-                      {selectedConversation.participantName.split(" ").map(n => n[0]).join("").toUpperCase()}
+<div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                      {selectedConversation.participant_name_c?.split(" ").map(n => n[0]).join("").toUpperCase()}
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900">
-                        {selectedConversation.participantName}
+                        {selectedConversation.participant_name_c}
                       </h3>
                       <p className="text-sm text-gray-600">
-                        {selectedConversation.jobTitle}
+                        {selectedConversation.job_title_c}
                       </p>
                     </div>
                   </div>
@@ -207,7 +207,7 @@ const Messages = () => {
 
                     return (
                       <div
-                        key={message.Id}
+key={message.Id}
                         className={`flex ${isMyMessage ? "justify-end" : "justify-start"}`}
                       >
                         <div
@@ -217,11 +217,11 @@ const Messages = () => {
                               : "bg-gray-100 text-gray-900"
                           }`}
                         >
-                          <p className="text-sm">{message.content}</p>
+                          <p className="text-sm">{message.content_c}</p>
                           <p className={`text-xs mt-1 ${
                             isMyMessage ? "text-white/70" : "text-gray-500"
                           }`}>
-                            {format(new Date(message.timestamp), "h:mm a")}
+                            {format(new Date(message.timestamp_c), "h:mm a")}
                           </p>
                         </div>
                       </div>

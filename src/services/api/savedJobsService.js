@@ -1,75 +1,147 @@
-import savedJobsData from "@/services/mockData/savedJobs.json";
-
 class SavedJobsService {
   constructor() {
-    this.savedJobs = [...savedJobsData];
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'saved_job_c';
+    this.currentUserId = 1; // Mock user ID
   }
 
-  // Get all saved jobs for current user (mock implementation)
   async getAll() {
-    await this.delay(300);
-    return [...this.savedJobs];
-  }
-
-  // Check if a job is saved
-  async isSaved(jobId) {
-    await this.delay(100);
-    return this.savedJobs.some(saved => saved.jobId === jobId);
-  }
-
-  // Add a job to saved jobs
-  async add(jobId) {
-    await this.delay(200);
-    
-    // Check if already saved
-    if (this.savedJobs.some(saved => saved.jobId === jobId)) {
-      return false; // Already saved
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "saved_at_c"}},
+          {"field": {"Name": "user_id_c"}},
+          {"field": {"Name": "job_id_c"}},
+          {"field": {"Name": "Tags"}}
+        ],
+        where: [
+          {"FieldName": "user_id_c", "Operator": "EqualTo", "Values": [this.currentUserId]}
+        ]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response?.data?.length) {
+        return [];
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching saved jobs:", error?.response?.data?.message || error);
+      return [];
     }
-
-    const newSavedJob = {
-      Id: Math.max(0, ...this.savedJobs.map(s => s.Id)) + 1,
-      jobId: jobId,
-      savedAt: new Date().toISOString(),
-      userId: 1 // Mock user ID
-    };
-
-    this.savedJobs.push(newSavedJob);
-    return true; // Successfully saved
   }
 
-  // Remove a job from saved jobs
+  async isSaved(jobId) {
+    try {
+      const params = {
+        fields: [{"field": {"Name": "Id"}}],
+        where: [
+          {"FieldName": "job_id_c", "Operator": "EqualTo", "Values": [parseInt(jobId)]},
+          {"FieldName": "user_id_c", "Operator": "EqualTo", "Values": [this.currentUserId]}
+        ]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      return response?.data?.length > 0;
+    } catch (error) {
+      console.error("Error checking saved job:", error?.response?.data?.message || error);
+      return false;
+    }
+  }
+
+  async add(jobId) {
+    try {
+      const alreadySaved = await this.isSaved(jobId);
+      if (alreadySaved) {
+        return false;
+      }
+
+      const params = {
+        records: [{
+          Name: `Saved Job ${jobId}`,
+          saved_at_c: new Date().toISOString(),
+          user_id_c: this.currentUserId,
+          job_id_c: parseInt(jobId)
+        }]
+      };
+      
+      const response = await this.apperClient.createRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error adding saved job:", error?.response?.data?.message || error);
+      return false;
+    }
+  }
+
   async remove(jobId) {
-    await this.delay(200);
-    
-    const initialLength = this.savedJobs.length;
-    this.savedJobs = this.savedJobs.filter(saved => saved.jobId !== jobId);
-    
-    return this.savedJobs.length < initialLength; // Return true if removed
+    try {
+      const params = {
+        fields: [{"field": {"Name": "Id"}}],
+        where: [
+          {"FieldName": "job_id_c", "Operator": "EqualTo", "Values": [parseInt(jobId)]},
+          {"FieldName": "user_id_c", "Operator": "EqualTo", "Values": [this.currentUserId]}
+        ]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (response?.data?.length > 0) {
+        const recordId = response.data[0].Id;
+        const deleteParams = { RecordIds: [recordId] };
+        
+        const deleteResponse = await this.apperClient.deleteRecord(this.tableName, deleteParams);
+        return deleteResponse.success;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error("Error removing saved job:", error?.response?.data?.message || error);
+      return false;
+    }
   }
 
-  // Toggle saved status
   async toggle(jobId) {
     const isSaved = await this.isSaved(jobId);
     
     if (isSaved) {
       await this.remove(jobId);
-      return false; // Now unsaved
+      return false;
     } else {
       await this.add(jobId);
-      return true; // Now saved
+      return true;
     }
   }
 
-  // Get saved jobs count
   async getCount() {
-    await this.delay(100);
-    return this.savedJobs.length;
-  }
-
-  // Private helper method
-  delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    try {
+      const params = {
+        fields: [{"field": {"Name": "Id"}}],
+        where: [
+          {"FieldName": "user_id_c", "Operator": "EqualTo", "Values": [this.currentUserId]}
+        ]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      return response?.data?.length || 0;
+    } catch (error) {
+      console.error("Error getting saved jobs count:", error?.response?.data?.message || error);
+      return 0;
+    }
   }
 }
+
+export default new SavedJobsService();
 
 export default new SavedJobsService();

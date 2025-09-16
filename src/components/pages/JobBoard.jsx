@@ -49,9 +49,9 @@ useEffect(() => {
     
     if (query.trim()) {
       filtered = filtered.filter(job =>
-        job.title.toLowerCase().includes(query.toLowerCase()) ||
-        job.company.toLowerCase().includes(query.toLowerCase()) ||
-        job.description.toLowerCase().includes(query.toLowerCase())
+job.title_c?.toLowerCase().includes(query.toLowerCase()) ||
+        job.company_c?.toLowerCase().includes(query.toLowerCase()) ||
+        job.description_c?.toLowerCase().includes(query.toLowerCase())
       );
     }
 
@@ -62,12 +62,12 @@ useEffect(() => {
     let filtered = [...jobList];
 
     if (filters.type) {
-      filtered = filtered.filter(job => job.type === filters.type);
+filtered = filtered.filter(job => job.type_c === filters.type);
     }
 
     if (filters.location) {
-      filtered = filtered.filter(job =>
-        job.location.toLowerCase().includes(filters.location.toLowerCase())
+filtered = filtered.filter(job =>
+        job.location_c?.toLowerCase().includes(filters.location.toLowerCase())
       );
     }
 
@@ -106,13 +106,13 @@ useEffect(() => {
 
     try {
       const newApplication = {
-        jobId: job.Id,
-        candidateId: 1, // Mock candidate ID
-        status: "Applied",
-        appliedDate: new Date().toISOString(),
-        coverLetter: "I am very interested in this position and believe my skills would be a great fit.",
-        notes: "",
-        interviews: []
+job_id_c: job.Id,
+        candidate_id_c: 1, // Mock candidate ID
+        status_c: "Applied",
+        applied_date_c: new Date().toISOString(),
+        cover_letter_c: "I am very interested in this position and believe my skills would be a great fit.",
+        notes_c: "",
+        interviews_c: ""
       };
 
       await applicationService.create(newApplication);
@@ -123,11 +123,11 @@ useEffect(() => {
   };
 
   const handleView = (job) => {
-    toast.info(`Viewing details for ${job.title}`);
+toast.info(`Viewing details for ${job.title_c}`);
   };
 
   const handleEdit = (job) => {
-    toast.info(`Managing job posting: ${job.title}`);
+toast.info(`Managing job posting: ${job.title_c}`);
   };
 
   if (loading) return <Loading rows={4} />;

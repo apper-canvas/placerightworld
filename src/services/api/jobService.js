@@ -1,59 +1,178 @@
-import jobsData from "@/services/mockData/jobs.json";
-
 class JobService {
   constructor() {
-    this.jobs = [...jobsData];
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'job_c';
   }
 
   async getAll() {
-    await this.delay(300);
-    return [...this.jobs];
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "company_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "requirements_c"}},
+          {"field": {"Name": "location_c"}},
+          {"field": {"Name": "salary_range_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "posted_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "Tags"}}
+        ]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response?.data?.length) {
+        return [];
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching jobs:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 
   async getById(id) {
-    await this.delay(200);
-    const job = this.jobs.find(j => j.Id === parseInt(id));
-    if (!job) {
-      throw new Error("Job not found");
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "company_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "requirements_c"}},
+          {"field": {"Name": "location_c"}},
+          {"field": {"Name": "salary_range_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "posted_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "Tags"}}
+        ]
+      };
+      
+      const response = await this.apperClient.getRecordById(this.tableName, id, params);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching job ${id}:`, error?.response?.data?.message || error);
+      return null;
     }
-    return { ...job };
   }
 
   async create(jobData) {
-    await this.delay(400);
-    const newJob = {
-      ...jobData,
-      Id: Math.max(...this.jobs.map(j => j.Id)) + 1,
-      postedDate: new Date().toISOString(),
-      applications: []
-    };
-    this.jobs.push(newJob);
-    return { ...newJob };
+    try {
+      const params = {
+        records: [{
+          Name: jobData.Name || jobData.title_c,
+          title_c: jobData.title_c,
+          company_c: jobData.company_c,
+          description_c: jobData.description_c,
+          requirements_c: jobData.requirements_c,
+          location_c: jobData.location_c,
+          salary_range_c: jobData.salary_range_c,
+          type_c: jobData.type_c,
+          posted_date_c: jobData.posted_date_c || new Date().toISOString(),
+          status_c: jobData.status_c || "Active",
+          Tags: jobData.Tags
+        }]
+      };
+      
+      const response = await this.apperClient.createRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+      
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} jobs:`, failed);
+        }
+        
+        return successful.length > 0 ? successful[0].data : null;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error creating job:", error?.response?.data?.message || error);
+      return null;
+    }
   }
 
   async update(id, jobData) {
-    await this.delay(350);
-    const index = this.jobs.findIndex(j => j.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Job not found");
+    try {
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          Name: jobData.Name || jobData.title_c,
+          title_c: jobData.title_c,
+          company_c: jobData.company_c,
+          description_c: jobData.description_c,
+          requirements_c: jobData.requirements_c,
+          location_c: jobData.location_c,
+          salary_range_c: jobData.salary_range_c,
+          type_c: jobData.type_c,
+          posted_date_c: jobData.posted_date_c,
+          status_c: jobData.status_c,
+          Tags: jobData.Tags
+        }]
+      };
+      
+      const response = await this.apperClient.updateRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+      
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} jobs:`, failed);
+        }
+        
+        return successful.length > 0 ? successful[0].data : null;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error updating job:", error?.response?.data?.message || error);
+      return null;
     }
-    this.jobs[index] = { ...this.jobs[index], ...jobData };
-    return { ...this.jobs[index] };
   }
 
   async delete(id) {
-    await this.delay(300);
-    const index = this.jobs.findIndex(j => j.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Job not found");
+    try {
+      const params = { 
+        RecordIds: [parseInt(id)]
+      };
+      
+      const response = await this.apperClient.deleteRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error deleting job:", error?.response?.data?.message || error);
+      return false;
     }
-    this.jobs.splice(index, 1);
-    return true;
-  }
-
-  delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
+
+export default new JobService();
 
 export default new JobService();

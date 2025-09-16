@@ -29,14 +29,14 @@ const SavedCandidates = () => {
     try {
       setLoading(true);
       setError(null);
-      const savedCandidateIds = await savedCandidatesService.getAll();
+const savedCandidateIds = await savedCandidatesService.getAll();
       
       // Get full candidate details for each saved candidate
-      const candidatePromises = savedCandidateIds.map(async (savedItem) => {
-        const candidate = await candidateService.getById(savedItem.candidateId);
+const candidatePromises = savedCandidateIds.map(async (savedItem) => {
+        const candidate = await candidateService.getById(savedItem.candidate_id_c?.Id || savedItem.candidate_id_c);
         return {
           ...candidate,
-          savedAt: savedItem.savedAt,
+          savedAt: savedItem.saved_at_c,
           savedId: savedItem.Id
         };
       });
@@ -74,20 +74,18 @@ const SavedCandidates = () => {
   const applyFilters = (candidateList = savedCandidates) => {
     return candidateList.filter(candidate => {
       const matchesSearch = !searchQuery || 
-        candidate.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        candidate.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        candidate.company?.toLowerCase().includes(searchQuery.toLowerCase());
+candidate.name_c?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        candidate.title_c?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        candidate.company_c?.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesExperience = !filters.experience || 
-        candidate.experience?.toString().includes(filters.experience);
+const matchesExperience = !filters.experience || 
+        candidate.experience_c?.toString().includes(filters.experience);
 
-      const matchesLocation = !filters.location || 
-        candidate.location?.toLowerCase().includes(filters.location.toLowerCase());
+const matchesLocation = !filters.location || 
+        candidate.location_c?.toLowerCase().includes(filters.location.toLowerCase());
 
-      const matchesSkills = !filters.skills ||
-        candidate.skills?.some(skill => 
-          skill.toLowerCase().includes(filters.skills.toLowerCase())
-        );
+const matchesSkills = !filters.skills ||
+        candidate.skills_c?.toLowerCase().includes(filters.skills.toLowerCase());
 
       return matchesSearch && matchesExperience && matchesLocation && matchesSkills;
     });

@@ -30,52 +30,52 @@ const ApplicationCard = ({ application, job, candidate, onView, onUpdateStatus }
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            {currentRole === "candidate" ? job?.title : candidate?.name}
+{currentRole === "candidate" ? job?.title_c : candidate?.name_c}
           </h3>
           <p className="text-primary font-medium mb-2">
-            {currentRole === "candidate" ? job?.company : job?.title}
+{currentRole === "candidate" ? job?.company_c : job?.title_c}
           </p>
           <div className="flex items-center text-gray-600 text-sm">
             <ApperIcon name="Calendar" className="w-4 h-4 mr-1" />
-            Applied {format(new Date(application.appliedDate), "MMM d, yyyy")}
+Applied {format(new Date(application.applied_date_c), "MMM d, yyyy")}
           </div>
         </div>
-        <Badge variant={statusColors[application.status] || "default"}>
-          <ApperIcon name={statusIcons[application.status]} className="w-3 h-3 mr-1" />
-          {application.status}
+<Badge variant={statusColors[application.status_c] || "default"}>
+          <ApperIcon name={statusIcons[application.status_c]} className="w-3 h-3 mr-1" />
+          {application.status_c}
         </Badge>
       </div>
 
-      {application.coverLetter && (
+{application.cover_letter_c && (
         <div className="mb-4">
           <h4 className="text-sm font-medium text-gray-700 mb-2">Cover Letter</h4>
-          <p className="text-sm text-gray-600 line-clamp-3">{application.coverLetter}</p>
+          <p className="text-sm text-gray-600 line-clamp-3">{application.cover_letter_c}</p>
         </div>
       )}
 
-      {application.notes && (
+{application.notes_c && (
         <div className="mb-4">
           <h4 className="text-sm font-medium text-gray-700 mb-2">Notes</h4>
-          <p className="text-sm text-gray-600">{application.notes}</p>
+          <p className="text-sm text-gray-600">{application.notes_c}</p>
         </div>
       )}
 
       <div className="flex items-center justify-between">
         <div className="flex items-center text-sm text-gray-500">
           <ApperIcon name="Clock" className="w-4 h-4 mr-1" />
-          {application.interviews?.length || 0} interviews scheduled
+{application.interviews_c ? 1 : 0} interviews scheduled
         </div>
         
         <div className="flex gap-2">
           <Button variant="outline" size="small" onClick={() => onView(application)}>
             View Details
           </Button>
-          {currentRole === "recruiter" && application.status === "Applied" && (
+{currentRole === "recruiter" && application.status_c === "Applied" && (
             <Button size="small" onClick={() => onUpdateStatus(application.Id, "Reviewing")}>
               Start Review
             </Button>
           )}
-          {currentRole === "recruiter" && application.status === "Reviewing" && (
+          {currentRole === "recruiter" && application.status_c === "Reviewing" && (
             <Button variant="accent" size="small" onClick={() => onUpdateStatus(application.Id, "Interview")}>
               Schedule Interview
             </Button>

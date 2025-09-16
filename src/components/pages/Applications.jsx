@@ -47,14 +47,13 @@ const Applications = () => {
 
   const handleUpdateStatus = async (applicationId, newStatus) => {
     try {
-      const application = applications.find(app => app.Id === applicationId);
+const application = applications.find(app => app.Id === applicationId);
       if (!application) return;
 
       const updatedApplication = {
-        ...application,
-        status: newStatus
+...application,
+        status_c: newStatus
       };
-
       await applicationService.update(applicationId, updatedApplication);
       
       setApplications(prev =>
@@ -77,18 +76,18 @@ const Applications = () => {
   const getCandidateById = (candidateId) => candidates.find(candidate => candidate.Id === parseInt(candidateId));
 
   const filteredApplications = applications.filter(app => {
-    if (statusFilter === "all") return true;
-    return app.status === statusFilter;
+if (statusFilter === "all") return true;
+    return app.status_c === statusFilter;
   });
 
   const statusCounts = {
-    all: applications.length,
-    Applied: applications.filter(app => app.status === "Applied").length,
-    Reviewing: applications.filter(app => app.status === "Reviewing").length,
-    Interview: applications.filter(app => app.status === "Interview").length,
-    Offer: applications.filter(app => app.status === "Offer").length,
-    Rejected: applications.filter(app => app.status === "Rejected").length,
-    Accepted: applications.filter(app => app.status === "Accepted").length
+all: applications.length,
+    Applied: applications.filter(app => app.status_c === "Applied").length,
+    Reviewing: applications.filter(app => app.status_c === "Reviewing").length,
+    Interview: applications.filter(app => app.status_c === "Interview").length,
+    Offer: applications.filter(app => app.status_c === "Offer").length,
+    Rejected: applications.filter(app => app.status_c === "Rejected").length,
+    Accepted: applications.filter(app => app.status_c === "Accepted").length
   };
 
   if (loading) return <Loading rows={4} />;
@@ -132,9 +131,9 @@ const Applications = () => {
       {/* Applications List */}
       {filteredApplications.length > 0 ? (
         <div className="grid gap-6">
-          {filteredApplications.map((application) => {
-            const job = getJobById(application.jobId);
-            const candidate = getCandidateById(application.candidateId);
+{filteredApplications.map((application) => {
+            const job = getJobById(application.job_id_c?.Id || application.job_id_c);
+            const candidate = getCandidateById(application.candidate_id_c?.Id || application.candidate_id_c);
             
             return (
               <ApplicationCard

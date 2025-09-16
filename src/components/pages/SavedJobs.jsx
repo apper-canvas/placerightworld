@@ -19,9 +19,9 @@ const SavedJobs = () => {
       setError("");
       setLoading(true);
       
-      const savedJobIds = await savedJobsService.getAll();
+const savedJobIds = await savedJobsService.getAll();
       const jobPromises = savedJobIds.map(savedJob => 
-        jobService.getById(savedJob.jobId)
+        jobService.getById(savedJob.job_id_c?.Id || savedJob.job_id_c)
       );
       
       const jobs = await Promise.all(jobPromises);
@@ -53,12 +53,12 @@ const SavedJobs = () => {
     }
   };
 
-  const handleApply = (job) => {
-    toast.success(`Applied to ${job.title}`);
+const handleApply = (job) => {
+    toast.success(`Applied to ${job.title_c}`);
   };
 
-  const handleView = (job) => {
-    toast.info(`Viewing details for ${job.title}`);
+const handleView = (job) => {
+    toast.info(`Viewing details for ${job.title_c}`);
   };
 
   if (loading) return <Loading rows={4} />;
@@ -102,7 +102,7 @@ const SavedJobs = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {savedJobs.filter(job => job.status === "Active").length}
+{savedJobs.filter(job => job.status_c === "Active").length}
               </p>
               <p className="text-sm text-gray-500">Active Jobs</p>
             </div>
@@ -116,7 +116,7 @@ const SavedJobs = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {new Set(savedJobs.map(job => job.company)).size}
+{new Set(savedJobs.map(job => job.company_c)).size}
               </p>
               <p className="text-sm text-gray-500">Companies</p>
             </div>

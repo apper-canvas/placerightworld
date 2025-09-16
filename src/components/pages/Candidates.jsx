@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import ApperIcon from "@/components/ApperIcon";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import Button from "@/components/atoms/Button";
-import SearchBar from "@/components/molecules/SearchBar";
-import CandidateCard from "@/components/molecules/CandidateCard";
-import { useRole } from "@/hooks/useRole";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import candidateService from "@/services/api/candidateService";
 import savedCandidatesService from "@/services/api/savedCandidatesService";
-import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
+import CandidateCard from "@/components/molecules/CandidateCard";
+import Button from "@/components/atoms/Button";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import { useRole } from "@/hooks/useRole";
 
 const Candidates = () => {
   const { currentRole } = useRole();
@@ -45,17 +45,13 @@ const Candidates = () => {
   const handleSearch = (query) => {
     let filtered = candidates;
     
-    if (query.trim()) {
+if (query.trim()) {
       filtered = filtered.filter(candidate =>
-        candidate.name.toLowerCase().includes(query.toLowerCase()) ||
-        candidate.skills.some(skill => skill.toLowerCase().includes(query.toLowerCase())) ||
-        candidate.experience.some(exp => 
-          exp.position.toLowerCase().includes(query.toLowerCase()) ||
-          exp.company.toLowerCase().includes(query.toLowerCase())
-        )
+        candidate.name_c?.toLowerCase().includes(query.toLowerCase()) ||
+        candidate.skills_c?.toLowerCase().includes(query.toLowerCase()) ||
+        candidate.experience_c?.toLowerCase().includes(query.toLowerCase())
       );
     }
-
     applyFilters(filtered);
   };
 
@@ -64,25 +60,21 @@ const Candidates = () => {
 
     if (filters.skills) {
       filtered = filtered.filter(candidate =>
-        candidate.skills.some(skill =>
-          skill.toLowerCase().includes(filters.skills.toLowerCase())
-        )
+candidate.skills_c?.toLowerCase().includes(filters.skills.toLowerCase())
       );
     }
 
     if (filters.location) {
-      filtered = filtered.filter(candidate =>
-        candidate.location.toLowerCase().includes(filters.location.toLowerCase())
+filtered = filtered.filter(candidate =>
+        candidate.location_c?.toLowerCase().includes(filters.location.toLowerCase())
       );
     }
 
     if (filters.experience) {
       const minYears = parseInt(filters.experience);
       if (!isNaN(minYears)) {
-        filtered = filtered.filter(candidate => {
-          const totalExperience = candidate.experience.reduce((total, exp) => {
-            return total + (exp.duration || 1);
-          }, 0);
+filtered = filtered.filter(candidate => {
+          const totalExperience = candidate.experience_c?.length || 0;
           return totalExperience >= minYears;
         });
       }
