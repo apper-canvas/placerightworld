@@ -166,5 +166,3 @@ class CompanyService {
 }
 
 export default new CompanyService();
-
-export default new CompanyService();

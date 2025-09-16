@@ -143,5 +143,3 @@ class SavedJobsService {
 }
 
 export default new SavedJobsService();
-
-export default new SavedJobsService();

@@ -174,5 +174,3 @@ class JobService {
 }
 
 export default new JobService();
-
-export default new JobService();
